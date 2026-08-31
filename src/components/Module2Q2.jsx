@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react"
 
+/*
+  💡 INTERVIEW CHEAT SHEET: 3 LINES TO FIX API RACE CONDITIONS
+  -------------------------------------------------------------
+  Line 1: const controller = new AbortController()               // 1. Create controller in useEffect
+  Line 2: fetch(url, { signal: controller.signal })             // 2. Attach signal to fetch()
+  Line 3: return () => controller.abort()                       // 3. Abort in useEffect cleanup!
+
+  (Bonus rule: In catch block, ignore cancelling: if (err.name !== "AbortError") setError(...))
+*/
+
 export default function Module2Q2() {
   const [postId, setPostId] = useState(1)
   const [post, setPost] = useState(null)
@@ -7,7 +17,7 @@ export default function Module2Q2() {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    // 1. Create AbortController instance
+    // Line 1: Create AbortController instance
     const controller = new AbortController()
 
     const fetchPost = async () => {
