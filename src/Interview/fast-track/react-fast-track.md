@@ -59,9 +59,9 @@
 - [x] `useEffect` cleanup function & unmounting
 - [x] `useRef` vs `useState` (DOM references & mutable values without re-rendering)
 
-## ⬜ MODULE 2: API Fetching & Custom Hooks (`useFetch`)
-- [ ] Fetching API data in `useEffect`
-- [ ] Handling Loading, Error, and Empty states
+## 🟨 MODULE 2: API Fetching & Custom Hooks (`useFetch`) (IN PROGRESS: 2/4)
+- [x] Fetching API data in `useEffect`
+- [x] Handling Loading, Error, and Empty states
 - [ ] Handling stale API responses / race conditions (Cleanup with AbortController)
 - [ ] Building reusable `useFetch(url)` Custom Hook
 
