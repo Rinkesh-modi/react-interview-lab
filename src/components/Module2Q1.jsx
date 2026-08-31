@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import useFetch from "../hooks/useFetch"
 
 const LoadingUi = () => {
   return <><h1>calling api</h1></>
@@ -40,10 +41,10 @@ export default function Module2Q1() {
   }, [])
   return (
     <>
-      <div className="w-full flex-1 item-center bg-white text-center">
-        <h1 className="text-lg text-black uppercase">api call</h1></div>
+      <div className="w-full flex flex-col item-center text-left gap-y-10">
+        <h1 className="text-lg text-white uppercase">api call</h1>
       {error && <h2 className="text-red-500 font-bold p-2">{error}</h2>}
-      {loading ? <LoadingUi /> : <DisplayPosts posts={data} />}
+      {loading ? <LoadingUi /> : <DisplayPosts posts={data} />}</div>
     </>
   )
 }

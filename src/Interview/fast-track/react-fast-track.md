@@ -2,12 +2,12 @@
 
 **Overall Progress:**
 - 🟩 **Module 1: Core Hooks & State Updates** (100% | 6/6 topics)
-- ⬜ **Module 2: API Fetching & Custom Hooks** (0% | 0/4 topics)
+- 🟩 **Module 2: API Fetching & Custom Hooks** (100% | 4/4 topics)
 - ⬜ **Module 3: Debounced Search & Forms** (0% | 0/4 topics)
 - ⬜ **Module 4: Performance & Memoization** (0% | 0/4 topics)
 - ⬜ **Module 5: Rapid Mock Simulation** (0% | 0/2 topics)
-- 📊 **Total Topic Progress:** 6 / 20 topics completed (30%)
-- 🏆 **Modules Completed:** 1 / 5 modules (20%)
+- 📊 **Total Topic Progress:** 10 / 20 topics completed (50%)
+- 🏆 **Modules Completed:** 2 / 5 modules (40%)
 
 > Goal: **Interview Readiness in 2 Hours** via focused high-yield modules and live coding.
 
@@ -59,11 +59,11 @@
 - [x] `useEffect` cleanup function & unmounting
 - [x] `useRef` vs `useState` (DOM references & mutable values without re-rendering)
 
-## 🟨 MODULE 2: API Fetching & Custom Hooks (`useFetch`) (IN PROGRESS: 3/4)
+## 🟩 MODULE 2: API Fetching & Custom Hooks (`useFetch`) (COMPLETED)
 - [x] Fetching API data in `useEffect`
 - [x] Handling Loading, Error, and Empty states
 - [x] Handling stale API responses / race conditions (Cleanup with AbortController)
-- [ ] Building reusable `useFetch(url)` Custom Hook
+- [x] Building reusable `useFetch(url)` Custom Hook
 
 ## ⬜ MODULE 3: Debounced Search & Controlled Forms
 - [ ] Controlled vs Uncontrolled inputs (`value` + `onChange` vs `useRef`)
