@@ -300,4 +300,77 @@ ANSWER:
 - 🔹 "Manual HTTP `res.ok` Check"
 - 🔹 "Unmounted Component Guard Flag"
 
+---
+
+QUESTION 7: What are API Race Conditions in React and how do you handle stale responses using `AbortController` in `useEffect` cleanup?
+
+ANSWER:
+1. What is an API Race Condition?
+   - Occurs when user interactions (e.g. switching tabs, typing in search input, clicking user IDs fast) trigger multiple network requests in rapid succession.
+   - Network responses arrive unpredictably due to latency. An EARLIER slow request might finish AFTER a LATER fast request, overwriting current UI with stale data!
+
+2. How `AbortController` Fixes Race Conditions (The 3-Line Secret):
+   - Line 1: `const controller = new AbortController();`
+   - Line 2: `fetch(url, { signal: controller.signal });`
+   - Line 3: `return () => controller.abort();` (In `useEffect` cleanup function)
+
+3. Ignoring Cancelled Errors:
+   - In `catch (err)`, check `if (err.name !== "AbortError") setError(err.message)` so cancelled requests don't trigger user-facing error banners.
+
+✍️ PAPER NOTE-TAKING SUMMARY (Copy to Notebook):
+- 📌 Core Problem: Out-of-order async response completion overwrites new UI with stale data.
+- ⚙️ Mechanism: Pass `{ signal: controller.signal }` to `fetch()`, call `controller.abort()` in `useEffect` cleanup.
+- 🔑 Ignore AbortError: Filter out `err.name === 'AbortError'` in `catch` block.
+
+🗣️ KEYWORDS TO SAY IN INTERVIEW:
+- 🔹 "Out-of-order Async Response Overwrite"
+- 🔹 "Network Request Cancellation"
+- 🔹 "AbortController & AbortSignal Web API"
+- 🔹 "Filtering `AbortError` in Catch Block"
+
+---
+
+QUESTION 8: How do you build a reusable `useFetch(url)` Custom Hook?
+
+ANSWER:
+1. Purpose: Encapsulates stateful logic (`data`, `loading`, `error`, `refetch`) into a single reusable hook function starting with `use`.
+2. Contract: Inputs `(url)`, Returns `{ data, loading, error, refetch }`.
+3. Check `res.ok`: Always check `if (!res.ok) throw new Error(...)` before parsing `res.json()`.
+4. Refetch Function: Return a function `refetch = () => setReload(c => c + 1)` to trigger re-fetches on button click.
+
+✍️ PAPER NOTE-TAKING SUMMARY (Copy to Notebook):
+- 📌 Custom Hook Rule: Must start with `use`. Encapsulates stateful logic for components.
+- ⚙️ Return Contract: Returns `{ data, loading, error, refetch }`.
+
+🗣️ KEYWORDS TO SAY IN INTERVIEW:
+- 🔹 "Stateful Logic Abstraction"
+- 🔹 "Custom Hook Naming Convention (`use...`)"
+- 🔹 "Trigger Counter for Refetching"
+
+---
+
+# 🟪 MODULE 3: DEBOUNCED SEARCH & FORMS
+
+QUESTION 9: What is the difference between Controlled vs Uncontrolled inputs, and when should you use `useState` vs `useRef`?
+
+ANSWER:
+1. Controlled Components (`useState`):
+   - React state is the **Single Source of Truth** (`value={state}`).
+   - Every keypress triggers `onChange`, re-rendering the component.
+   - Ideal for real-time validation, dynamic submit buttons, formatted input fields (credit cards).
+
+2. Uncontrolled Components (`useRef`):
+   - Browser DOM owns the input state (`defaultValue=""`).
+   - 0 re-renders while typing. Read value via `inputRef.current.value` on form submission.
+   - Ideal for file uploads (`<input type="file" />`), non-interactive inputs, or massive forms (50+ fields).
+
+✍️ PAPER NOTE-TAKING SUMMARY (Copy to Notebook):
+- 📌 Controlled: `value` + `onChange` (React owns state, re-renders on keystroke).
+- 📌 Uncontrolled: `ref` + `defaultValue` (DOM owns state, 0 re-renders while typing).
+
+🗣️ KEYWORDS TO SAY IN INTERVIEW:
+- 🔹 "Single Source of Truth"
+- 🔹 "Per-keystroke Re-renders vs DOM Node Dereferencing"
+- 🔹 "Real-time Instant Validation"
+
 
