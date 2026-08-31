@@ -1,0 +1,324 @@
+REACT INTERVIEW PREP REVISION NOTES
+----------------------------------
+
+QUESTION 1: Can you explain the Virtual DOM and React Reconciliation (Diffing Algorithm)?
+
+ANSWER:
+1. What is the Virtual DOM?
+   - The Virtual DOM is a lightweight, in-memory representation of the real DOM UI elements (JavaScript objects).
+   - When a component's state or props change, React constructs a new Virtual DOM tree.
+
+2. What is Reconciliation?
+   - Reconciliation is the process through which React updates the real DOM.
+   - React compares the new Virtual DOM tree with the previous Virtual DOM tree (a process called "diffing").
+   - It calculates the minimal set of changes needed and batch-applies those changes to the actual browser DOM in the commit phase.
+
+3. Why is it fast?
+   - Direct real DOM manipulation is slow because it causes browser re-layouts and reflows.
+   - Diffing JavaScript objects in memory is extremely fast. React only touches the real DOM nodes that actually changed.
+
+4. Diffing Heuristics ($O(n)$ complexity instead of $O(n^3)$):
+   - Element Type Change: If two element types are different (e.g. `<div>` to `<span>`), React tears down the old tree completely and builds the new one from scratch.
+   - Key Prop: React uses keys to match children in the original tree with children in the subsequent tree. Keys must be unique and stable among siblings.
+
+5. Quick Glance Mind Map:
+
+   [State/Props Change]
+           │
+           ▼
+   [New Virtual DOM Tree Generated]
+           │
+           ▼
+   [Diffing Algorithm (Old VDOM vs New VDOM)]
+    ├── Type changed?  ──> Tear down old node & create new node
+    ├── Same type?     ──> Keep node, update changed attributes/styles only
+    └── List items?    ──> Use 'key' prop to match items efficiently
+           │
+           ▼
+   [Commit Phase: Batch Update Real DOM]
+
+---
+
+QUESTION 2: How does state batching work in React 18 vs React 17?
+
+ANSWER:
+1. What is State Batching?
+   - React groups multiple state updates into a single re-render to improve performance and prevent unnecessary layout repaints.
+
+2. React 17 behavior:
+   - React only batched state updates inside React event handlers (like onClick or onChange).
+   - State updates inside promises, setTimeout, native event listeners, or fetch callbacks were NOT batched, triggering multiple separate re-renders.
+
+3. React 18 behavior (Automatic Batching):
+   - React 18 batches ALL state updates automatically, regardless of where they originate (promises, setTimeout, native event handlers, etc.).
+
+4. Bypassing Batching:
+   - If an update must be processed synchronously before the next line of code, `flushSync()` from `react-dom` can be used (though rarely needed).
+
+5. Quick Glance Mind Map:
+
+   [React 17]
+    ├── Inside onClick   ──> Batched (1 re-render)
+    └── Inside setTimeout ──> NOT Batched (multiple re-renders)
+
+   [React 18 (Automatic Batching)]
+    ├── Inside onClick   ──> Batched (1 re-render)
+    ├── Inside setTimeout ──> Batched (1 re-render)
+    └── Inside Promises   ──> Batched (1 re-render)
+
+---
+
+QUESTION 3: What is a Stale Closure in useEffect or custom hooks, and how do you fix it?
+
+ANSWER:
+1. What is a Stale Closure?
+   - A closure captures variables from its outer lexical scope at the time it is created.
+   - If an effect or callback (like `setInterval` or `setTimeout`) references a state variable but does NOT include that variable in its dependency array, the callback will forever reference the initial (stale) value of that variable.
+
+2. How to fix it?
+   - Solution 1: Pass all referenced state/prop values into the dependency array `[count]`.
+   - Solution 2: Use functional state updates `setCount(prevCount => prevCount + 1)` which doesn't require closing over the `count` state variable.
+   - Solution 3: Use `useRef` to store mutable values that persist across renders without needing re-triggering effects.
+
+3. Quick Glance Mind Map:
+
+   [Stale Closure Problem]
+   useEffect(() => {
+     setInterval(() => console.log(count), 1000); // count is stuck at initial 0!
+   }, []); // Missing 'count' in deps!
+
+   [Solutions]
+   ├── Add dependency ──> deps: [count] (resets interval on update)
+   ├── Updater fn     ──> setCount(prev => prev + 1)
+   └── useRef         ──> countRef.current (always gets latest value)
+
+---
+
+QUESTION 4: What is React, why do we use it, and what does Declarative UI mean vs Imperative UI?
+
+ANSWER:
+1. What is React?
+   - A JavaScript library developed by Meta for building component-based, state-driven user interfaces.
+
+2. Why do we use React (vs Vanilla JS)?
+   - Vanilla JS (Imperative approach) requires manual DOM selection (`querySelector`, `getElementById`) and manual DOM mutations (`element.innerText = ...`). At scale, this becomes error-prone, hard to maintain, and performance-heavy due to unnecessary DOM reflows.
+   - React abstracts DOM manipulation. You manage state, and React automatically synchronizes the UI with state changes efficiently using the Virtual DOM.
+
+3. Imperative vs Declarative UI:
+   - Imperative UI (Vanilla JS): You write step-by-step instructions on HOW to update the DOM.
+   - Declarative UI (React): You declare WHAT the UI should look like for a given state (`return <div>{count}</div>`). React calculates the diffs and updates the DOM under the hood.
+
+4. Quick Code Comparison:
+
+   [Imperative - Vanilla JS]
+   const btn = document.querySelector('#btn');
+   const countDisplay = document.querySelector('#count');
+   let count = 0;
+   btn.addEventListener('click', () => {
+     count++;
+     countDisplay.innerText = count; // Manual step-by-step DOM update
+   });
+
+   [Declarative - React]
+   function Counter() {
+     const [count, setCount] = useState(0);
+     return <button onClick={() => setCount(count + 1)}>{count}</button>;
+     // UI automatically stays in sync with state!
+   }
+
+
+---
+
+QUESTION 5: What is a React Component vs a React Element under the hood?
+
+ANSWER:
+1. React Component:
+   - A JavaScript function or class (a blueprint/template) that accepts `props` as input and returns a description of the UI (JSX).
+   - Example: `function Welcome(props) { return <h1>Hello, {props.name}</h1>; }`
+
+2. React Element:
+   - A lightweight, immutable plain JavaScript object created by JSX / `React.createElement()`.
+   - It tells React WHAT to render on screen (type, props, children).
+   - Example JSX `<Welcome name="Rinkesh" />` compiles to:
+     `{ type: Welcome, props: { name: "Rinkesh" }, key: null, ref: null }`
+
+3. Key Difference:
+   - Component = The blueprint / factory function.
+   - Element = The plain JS object representation generated when JSX is evaluated.
+
+---
+
+QUESTION 6: What is the difference between Functional Components and Class Components, and why do we use Functional Components?
+
+ANSWER:
+1. Class Components (Legacy):
+   - ES6 class extending `React.Component`.
+   - Uses `this.state` and `this.setState()`.
+   - Relies on verbose lifecycle methods (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`).
+   - Requires binding `this` context for event handlers.
+
+2. Functional Components (Modern standard, React 16.8+):
+   - Plain JavaScript functions taking `props` and returning JSX.
+   - Uses **Hooks** (`useState`, `useEffect`) for state management and side effects.
+
+3. Why Functional Components win:
+   - **No `this` binding issues:** Prevents common runtime bugs related to lost lexical `this` scope.
+   - **Hooks simplify lifecycle:** `useEffect` replaces multiple separate class lifecycle methods into clean, unified side-effect declarations.
+   - **Logic Reusability:** Custom hooks allow sharing stateful logic cleanly across components without "wrapper hell" (HOCs / render props).
+   - **Smaller bundle & performance:** Better minification, tree-shaking, and code readability.
+
+4. Quick Code Comparison:
+
+   [Class Component]
+   class Counter extends React.Component {
+     state = { count: 0 };
+     componentDidMount() { document.title = `Count: ${this.state.count}`; }
+     componentDidUpdate() { document.title = `Count: ${this.state.count}`; }
+     render() {
+       return <button onClick={() => this.setState({ count: this.state.count + 1 })}>{this.state.count}</button>;
+     }
+   }
+
+   [Functional Component with Hooks]
+   function Counter() {
+     const [count, setCount] = useState(0);
+     useEffect(() => { document.title = `Count: ${count}`; }, [count]);
+     return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
+   }
+
+---
+
+QUESTION 7: Is JSX HTML? How is JSX transformed, why className/htmlFor, and why Fragments over wrapper divs?
+
+ANSWER:
+1. Is JSX HTML?
+   - NO. JSX (JavaScript XML) is syntactic sugar for creating React Elements using HTML-like syntax inside JavaScript.
+
+2. How is JSX transformed under the hood?
+   - Compilers like Babel transform JSX into standard JavaScript calls: `React.createElement(type, props, ...children)` (or `jsx()` in modern React 17+ transform).
+   - Example: `<h1 className="header">Hello World</h1>`
+     Compiles to: `React.createElement('h1', { className: 'header' }, 'Hello World')`
+
+3. Why `className` and `htmlFor` instead of `class` and `for`?
+   - JSX transpiles directly into plain JavaScript objects (`{ className: "header" }`).
+   - `class` and `for` are **reserved keywords in JavaScript** (`class MyClass {}`, `for (let i...) {}`). To avoid syntax conflicts and keywords collision, React uses camelCase HTML property names like `className` and `htmlFor`.
+
+4. Why must components return a single root element?
+   - A component function returns the result of JSX (a single `React.createElement` object or array). In JavaScript, a function cannot return multiple separate values without a single parent container.
+
+5. Why are Fragments (`<React.Fragment>` / `<>...</>`) preferred over `<div>` wrappers?
+   - **No DOM Bloat:** Fragments group children without adding an actual extra node to the browser DOM.
+   - **Layout Integrity:** Wrapper `<div>`s can break CSS Flexbox, CSS Grid layouts, or semantic HTML hierarchies (e.g., `<table>`, `<tr>`, `<ul>`, `<li>`).
+   - **Performance:** Fewer DOM nodes lead to lower memory footprint and faster rendering.
+
+6. Quick Code Comparison:
+
+   [JSX Source]
+   function Header() {
+     return (
+       <>
+         <h1>Title</h1>
+         <p className="subtitle">Subtitle</p>
+       </>
+     );
+   }
+
+   [Under the Hood Transformation]
+   function Header() {
+     return React.createElement(
+       React.Fragment,
+       null,
+       React.createElement('h1', null, 'Title'),
+       React.createElement('p', { className: 'subtitle' }, 'Subtitle')
+     );
+   }
+
+---
+
+QUESTION 8: What is the difference between Props and State, and can a child component mutate props?
+
+ANSWER:
+1. Props (Properties):
+   - External inputs passed down from a parent component to a child component.
+   - **Immutable / Read-only:** A child component can NEVER mutate its received props directly. Data flows unidirectionally (top-down).
+
+2. State:
+   - Internal, private data managed locally inside a component (e.g. via `useState`).
+   - **Mutable (via updater function):** Updated using state setter functions (`setCount(prev => prev + 1)`).
+
+3. Key Distinction:
+   - Props = Arguments passed into a function (external).
+   - State = Local variables declared inside a function body (internal reactive state).
+
+---
+
+QUESTION 9: What causes a React component to re-render, and what happens to child components by default?
+
+ANSWER:
+1. Re-render Triggers:
+   - **State changes:** Calling a state setter function (`setCount`).
+   - **Prop changes:** Parent passes new prop values to child.
+   - **Context changes:** Value in a consumed `React.Context` changes.
+   - **Parent re-rendering:** When a parent re-renders, all child components re-render by default.
+
+2. Does modifying a local variable (`let x = 10; x = 20;`) cause a re-render?
+   - **NO.** Changing a regular JavaScript variable does NOT trigger a re-render because React does not track normal variable mutations. Only state updates trigger the render pipeline.
+
+3. Default Child Re-rendering Behavior:
+   - **By default, when a parent component re-renders, ALL of its children will ALSO re-render recursively**, even if the child's own props have NOT changed!
+   - **Prevention:** To prevent unnecessary child re-renders when props haven't changed, wrap the child component in `React.memo(Child)`.
+
+4. Quick Glance Mind Map:
+
+   [Parent Component Re-renders]
+           │
+           ▼
+   [By default: All Child Components Re-render Recursively]
+           │
+           ├── Wrapped in React.memo? ──> Props changed? ─ Yes ─> Re-render
+           │                                          └─ No  ─> Skip Re-render (Cached)
+           └── NOT wrapped in React.memo? ───────────> ALWAYS Re-render!
+
+---
+
+QUESTION 10: What is Derived State, why avoid unnecessary derived state, and what is Single Source of Truth?
+
+ANSWER:
+1. What is Derived State?
+   - Any value that can be calculated/computed from existing state or props during render.
+   - Example: Computing `const fullName = `${firstName} ${lastName}`;` instead of keeping a separate `fullName` state.
+
+2. Why avoid unnecessary derived state?
+   - **Prevents State Out-of-Sync Bugs:** Keeping redundant state requires manually syncing it via `useEffect` or multiple `setState` calls, leading to bugs where `fullName` doesn't match `firstName`.
+   - **Performance & Simplicity:** Computing values directly during render is fast, pure, and eliminates extra `useState` overhead and extra re-renders.
+
+3. What is "Single Source of Truth"?
+   - The architectural principle where each piece of state lives in ONE place in the React component tree. Derived values compute directly from this single source of truth rather than duplicating state.
+
+---
+
+QUESTION 11: What is the Render Phase vs. Commit Phase in React?
+
+ANSWER:
+1. Render Phase (Pure & Computation Only):
+   - React invokes component functions, evaluates JSX, creates the new Virtual DOM tree, and runs the diffing algorithm against the previous VDOM tree.
+   - **No side-effects allowed!** This phase is pure and can be paused, aborted, or restarted by React (e.g., in Concurrent Mode).
+
+2. Commit Phase (DOM Mutations & Effects):
+   - React applies the calculated DOM diffs to the actual browser DOM (inserting, updating, or deleting real DOM nodes).
+   - Once real DOM changes are committed, React executes `useLayoutEffect` synchronously and schedules `useEffect` asynchronously.
+
+3. Quick Glance Summary:
+
+   [Trigger: State / Prop Update]
+           │
+           ▼
+   [RENDER PHASE]  ──> Call Components ──> Build VDOM ──> Diff Old vs New VDOM
+           │
+           ▼
+   [COMMIT PHASE]  ──> Mutate Real Browser DOM ──> Run Effects (`useEffect`)
+
+---
+
+
+
