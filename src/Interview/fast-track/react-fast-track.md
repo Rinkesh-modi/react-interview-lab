@@ -65,8 +65,8 @@
 - [x] Handling stale API responses / race conditions (Cleanup with AbortController)
 - [x] Building reusable `useFetch(url)` Custom Hook
 
-## ⬜ MODULE 3: Debounced Search & Controlled Forms
-- [ ] Controlled vs Uncontrolled inputs (`value` + `onChange` vs `useRef`)
+## 🟨 MODULE 3: Debounced Search & Forms (IN PROGRESS: 1/4)
+- [x] Controlled vs Uncontrolled inputs (`value` + `onChange` vs `useRef`)
 - [ ] Form submission, validation, and error states
 - [ ] Building reusable `useDebounce(value, delay)` Custom Hook
 - [ ] Live coding a Debounced Search Filter
