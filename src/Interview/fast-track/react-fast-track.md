@@ -3,11 +3,11 @@
 **Overall Progress:**
 - 🟩 **Module 1: Core Hooks & State Updates** (100% | 6/6 topics)
 - 🟩 **Module 2: API Fetching & Custom Hooks** (100% | 4/4 topics)
-- ⬜ **Module 3: Debounced Search & Forms** (0% | 0/4 topics)
+- 🟩 **Module 3: Debounced Search & Forms** (100% | 4/4 topics)
 - ⬜ **Module 4: Performance & Memoization** (0% | 0/4 topics)
 - ⬜ **Module 5: Rapid Mock Simulation** (0% | 0/2 topics)
-- 📊 **Total Topic Progress:** 10 / 20 topics completed (50%)
-- 🏆 **Modules Completed:** 2 / 5 modules (40%)
+- 📊 **Total Topic Progress:** 14 / 20 topics completed (70%)
+- 🏆 **Modules Completed:** 3 / 5 modules (60%)
 
 > Goal: **Interview Readiness in 2 Hours** via focused high-yield modules and live coding.
 
@@ -65,11 +65,11 @@
 - [x] Handling stale API responses / race conditions (Cleanup with AbortController)
 - [x] Building reusable `useFetch(url)` Custom Hook
 
-## 🟨 MODULE 3: Debounced Search & Forms (IN PROGRESS: 2/4)
+## 🟩 MODULE 3: Debounced Search & Forms (COMPLETED)
 - [x] Controlled vs Uncontrolled inputs (`value` + `onChange` vs `useRef`)
 - [x] Form submission, validation, and error states
-- [ ] Building reusable `useDebounce(value, delay)` Custom Hook
-- [ ] Live coding a Debounced Search Filter
+- [x] Building reusable `useDebounce(value, delay)` Custom Hook
+- [x] Live coding a Debounced Search Filter
 
 ## ⬜ MODULE 4: Performance & Memoization
 - [ ] `useMemo` (memoizing expensive calculations)
