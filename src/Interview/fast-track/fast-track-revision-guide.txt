@@ -373,4 +373,44 @@ ANSWER:
 - 🔹 "Per-keystroke Re-renders vs DOM Node Dereferencing"
 - 🔹 "Real-time Instant Validation"
 
+---
+
+QUESTION 10: How do you handle Form Submission, Client-side Inline Validation, and Error States in React?
+
+ANSWER:
+1. `e.preventDefault()`: Stops native browser HTML form reloads so React handles submission client-side.
+2. Local Errors Object: Build `const newErrors = {}` inside `validate()` and return boolean `isValid`.
+3. Avoid State Overwrite Traps: Never call `setError(...)` multiple times in a row for different fields; pass the single accumulated `newErrors` object once.
+
+✍️ PAPER NOTE-TAKING SUMMARY (Copy to Notebook):
+- 📌 `e.preventDefault()` blocks HTML page refresh.
+- 📌 `validate()` returns `isValid` boolean to prevent asynchronous state checking bugs.
+
+🗣️ KEYWORDS TO SAY IN INTERVIEW:
+- 🔹 "Default Event Prevention (`e.preventDefault()`)"
+- 🔹 "Inline Field Validation"
+- 🔹 "Accumulated Error Object State"
+
+---
+
+QUESTION 11: What is Debouncing and how do you build a custom `useDebounce(value, delay)` hook?
+
+ANSWER:
+1. Purpose: Delays executing state updates / API requests until the user stops typing for `delay` ms (e.g. 500ms).
+2. Key Mechanism: Uses `setTimeout` inside `useEffect` and clears pending timers with `clearTimeout` in the cleanup function.
+3. Why `setTimeout` (not `setInterval`): `setTimeout` runs ONCE after delay expires; `setInterval` runs indefinitely in a loop.
+4. Exact Re-renders: Takes **exactly 2 re-renders**:
+   - Re-render #1 (0ms): Instantly updates raw input text & shows loading indicator.
+   - Re-render #2 (500ms): Updates debounced state & computes filtered list.
+
+✍️ PAPER NOTE-TAKING SUMMARY (Copy to Notebook):
+- 📌 Debounce: Cancels previous pending timer via `clearTimeout` on every new keypress.
+- 📌 Timer Type: Must use `setTimeout` (not `setInterval`).
+- 📌 Re-renders: Exactly 2 re-renders per search cycle.
+
+🗣️ KEYWORDS TO SAY IN INTERVIEW:
+- 🔹 "Keystroke Delay Optimization"
+- 🔹 "Cleanup Timer Cancellation (`clearTimeout`)"
+- 🔹 "Exactly 2 Re-renders Per Search Cycle"
+
 
