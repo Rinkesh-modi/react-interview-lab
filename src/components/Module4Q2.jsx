@@ -21,7 +21,7 @@ export default function Module4Q2() {
   // DOES NOT recreate `handleIncrement` and DOES NOT trigger ChildButton to re-render!
   const handleIncrement = useCallback(() => {
     setCount((prev) => prev + 1)
-  },[count])
+  },[])
 
   return (
     <div
