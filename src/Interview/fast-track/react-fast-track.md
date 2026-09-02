@@ -71,8 +71,8 @@
 - [x] Building reusable `useDebounce(value, delay)` Custom Hook
 - [x] Live coding a Debounced Search Filter
 
-## ⬜ MODULE 4: Performance & Memoization
-- [ ] `useMemo` (memoizing expensive calculations)
+## 🟨 MODULE 4: Performance & Memoization (IN PROGRESS: 1/4)
+- [x] `useMemo` (memoizing expensive calculations)
 - [ ] `useCallback` (memoizing function references)
 - [ ] `React.memo` (memoizing component renders)
 - [ ] Common React rendering output questions & fixes
